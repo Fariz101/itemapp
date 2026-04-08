@@ -2,61 +2,124 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Item List</title>
+    <title>ItemApp Dashboard</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: Arial; margin: 40px; background: #f9f9f9; }
-        table { border-collapse: collapse; width: 100%; background: white; }
-        th, td { border: 1px solid #ddd; padding: 10px; }
-        th { background: #333; color: white; }
-        img { width: 100px; border-radius: 5px; }
-        a { padding: 6px 12px; color: white; border-radius: 4px; text-decoration: none; }
-        .add { background: #007bff; }
-        .edit { background: #ffc107; }
-        .delete { background: #dc3545; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        .navbar {
+            background: #1e1e2f;
+            padding: 15px 30px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+        }
+
+        .btn-add { background: #4CAF50; }
+        .btn-edit { background: #ffc107; }
+        .btn-delete { background: #dc3545; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        img {
+            width: 80px;
+            border-radius: 8px;
+        }
     </style>
 </head>
+
 <body>
 
-<h2>Item List</h2>
-<a href="create.php" class="add">+ Add New Item</a><br><br>
+<div class="navbar">📦 ItemApp Dashboard</div>
 
-<table>
-<tr>
-    <th>Item Name</th>
-    <th>Item Code</th>
-    <th>Category</th>
-    <th>Photo</th>
-    <th>Action</th>
-</tr>
+<div class="container">
+    <div class="card">
 
-<?php
-$result = $mysqli->query("SELECT * FROM items ORDER BY id DESC");
+        <a href="create.php" class="btn btn-add">+ Add Item</a>
 
-while ($row = $result->fetch_assoc()) {
-    $photo_path = "uploads/" . htmlspecialchars($row['photo_filename']);
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Code</th>
+                <th>Category</th>
+                <th>Photo</th>
+                <th>Action</th>
+            </tr>
 
-    echo "<tr>";
-    echo "<td>{$row['item_name']}</td>";
-    echo "<td>{$row['item_code']}</td>";
-    echo "<td>{$row['category']}</td>";
-    echo "<td>";
+            <?php
+            $result = $mysqli->query("SELECT * FROM items ORDER BY id DESC");
+            while ($row = $result->fetch_assoc()) {
+                $photo = "uploads/" . $row['photo_filename'];
 
-    if (!empty($row['photo_filename']) && file_exists($photo_path)) {
-        echo "<img src='$photo_path'>";
-    } else {
-        echo "No Image";
-    }
+                echo "<tr>";
+                echo "<td>{$row['item_name']}</td>";
+                echo "<td>{$row['item_code']}</td>";
+                echo "<td>{$row['category']}</td>";
+                echo "<td>";
 
-    echo "</td>";
-    echo "<td>
-            <a href='edit.php?id={$row['id']}' class='edit'>Edit</a>
-            <a href='delete.php?id={$row['id']}' class='delete' onclick='return confirm(\"Delete this item?\")'>Delete</a>
-          </td>";
-    echo "</tr>";
-}
-?>
+                if (!empty($row['photo_filename']) && file_exists($photo)) {
+                    echo "<img src='$photo'>";
+                } else {
+                    echo "No Image";
+                }
 
-</table>
+                echo "</td>";
+                echo "<td>
+                        <a href='edit.php?id={$row['id']}' class='btn btn-edit'>Edit</a>
+                        <a href='delete.php?id={$row['id']}' class='btn btn-delete' onclick='return confirm(\"Delete?\")'>Delete</a>
+                      </td>";
+                echo "</tr>";
+            }
+            ?>
+        </table>
+
+    </div>
+</div>
 
 </body>
 </html>
